@@ -1,0 +1,9 @@
+{
+    "title": "Knapsack Game, normal form", 
+    "players": ["Player 1", "Player 2", "Player 3"], 
+    "investments": ["CDC", "ACC", "AAAI", "NIPS"], 
+    "w_pi": [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]], 
+    "w_p": [3, 2, 1], 
+    "v_pi":[[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]], 
+    "c_kpi": 1 
+}
