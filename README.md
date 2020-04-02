@@ -12,5 +12,5 @@ Follow instructions from the
 
 # Obtain Pure Equilibrium for Knapsack Problems 
 - edit the files in tests/, e.g. `knapsack1.json`
-- `python src/generate_knapsack [knapsack1.json]`
-- `python src/print_equilibirum [kanpsack1.json]`
+- generate normal form game files `python src/gen_kanpsack_nfg [knapsack1]`. See http://www.gambit-project.org/gambit15/formats.html#the-strategic-game-nfg-file-format-payoff-version for the description of nfg file format. 
+- save the equilibrium and print equilibirum in latex `python src/print_equilibirum [kanpsack1]`
