@@ -26,6 +26,10 @@ def ls(suffix='.json'):
     for j in jslist:
         yield j
 
+def dumpjs(js, filename):
+    with open(TESTDIR + filename+'.json', 'w') as lf:
+        json.dump(js, lf, indent=4)
+
 class KnapsackGame:
     def __init__(self, js, gen_strategies=False):
         """
