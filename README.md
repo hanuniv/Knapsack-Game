@@ -19,6 +19,4 @@ See http://www.gambit-project.org/gambit15/formats.html#the-strategic-game-nfg-f
     `python src/print_equilibirum.py [kanpsack1]`
 
 # Compute One Equilibrium for Knapsack Games 
-    ``` 
-    python src/sample_gen.py knapsack1 knapsack2
-    ```
+`python src/sample_gen.py knapsack1 knapsack2`
