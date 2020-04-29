@@ -1,4 +1,3 @@
-
 from game_utils import *
 
 for gamefile in ls(suffix='.nfg'):

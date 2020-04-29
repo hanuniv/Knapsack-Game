@@ -26,7 +26,6 @@ def ls(suffix='.json'):
     for j in jslist:
         yield j
 
-
 class KnapsackGame:
     def __init__(self, js, gen_strategies=False):
         """
