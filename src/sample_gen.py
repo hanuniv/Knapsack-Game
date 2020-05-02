@@ -29,7 +29,7 @@ def sample_gen(js, verify=False):
         # find a nash equilibria
         g.set_strategies(substrategies)
         g.write_gamefile()
-        eqns = list(g.enumerate_equilibrium())
+        eqns = g.all_eqns()
         x = eqns[0]  # given one equilibrium
         payoffs = g.payoffs(np.array(x))
         improved = False
