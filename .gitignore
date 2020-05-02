@@ -2,3 +2,4 @@ gambit
 */__pycache__/
 */*.nfg
 *.txt
+*_stat.json
