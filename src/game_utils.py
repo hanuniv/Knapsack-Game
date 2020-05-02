@@ -9,15 +9,18 @@ import gambit
 TESTDIR = "tests/"
 
 
-def ls(prefix='', suffix='.json', substr=''):
+def ls(prefix='', suffix='.json', substr='', exclude='_stat'):
     """
     list file names with given suffix without arguments, if arguments are given, loop over given files (without suffix)
+
+    call ls(), loop over all test files or file given by the command line
+    call ls(prefix='knapsack1') loop over test files with prefix 'knapsack1'
     """
-    if len(sys.argv) > 1:
+    if len(sys.argv) > 1 and prefix == '' and substr == '':
         jslist = [TESTDIR + f + suffix for f in sys.argv[1:]]
     else:
         jslist = [os.path.join(root, f) for root, _, files in os.walk(TESTDIR)
-                  for f in files if f.endswith(suffix) and f.startswith(prefix) and substr in f]
+                  for f in files if f.endswith(suffix) and f.startswith(prefix) and substr in f and exclude not in f]
         print("No knapsack json file listed. The test foler contains: \n \t ", jslist)
         y = input("Go over all of them? [y/n] > ")
         if y.lower() != 'y':
@@ -26,15 +29,23 @@ def ls(prefix='', suffix='.json', substr=''):
     for j in jslist:
         yield j
 
+
 def dumpjs(js, filename):
-    with open(TESTDIR + filename+'.json', 'w') as lf:
+    with open(TESTDIR + filename + '.json', 'w') as lf:
         json.dump(js, lf, indent=4)
 
+
 def stat(filename):
-    with open(TESTDIR + filename+'_stat.json', 'r') as fjs:
-        data=json.load(fjs)
+    """
+    return the mean and standard deviation of the statistic file
+
+    e.g. stat('knapsack-3-4') 
+    """
+    with open(TESTDIR + filename + '_stat.json', 'r') as fjs:
+        data = json.load(fjs)
     data = np.array(data)
     return np.mean(data, axis=0), np.std(data, axis=0)
+
 
 class KnapsackGame:
     def __init__(self, js, gen_strategies=False):
