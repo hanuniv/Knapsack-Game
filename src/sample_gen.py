@@ -15,21 +15,16 @@ import argparse
 # reldir = '../tests/'
 # js = reldir + 'knapsack2.json'
 
-
-def sample_gen(js, verify=False):
-    g = game_utils.KnapsackGame(js)
-    print("Working on ", js.split('/')[-1])
-    all_eqn_start = datetime.now()
-    if verify:
-        all_eqn = g.all_eqns()
-    all_eqn_end = datetime.now()
-    sample_gen_start = datetime.now()
+def sample_gen(g):
+    """
+    samle generation algorithm for finding nash equilibria
+    """
     substrategies = [[(0, 0, 0, 0)] for i in g.player_iter]
     while True:
         # find a nash equilibria
         g.set_strategies(substrategies)
         g.write_gamefile()
-        eqns = g.all_eqns()
+        eqns = g.current_eqns()
         x = eqns[0]  # given one equilibrium
         payoffs = g.payoffs(np.array(x))
         improved = False
@@ -51,17 +46,31 @@ def sample_gen(js, verify=False):
                 if x[p] not in substrategies[p]:
                     substrategies[p].append(x[p])
                     print("## Find a better alternative for p={} :".format(p), x)
-                    x[p] = oldxp
                     print("# --- over ---> ", substrategies)
                     improved = True
                     break  # optionally early break
+                x[p] = oldxp
         if not improved:
             print("# Find Nash Equilibria", x)
             print("# --- over ---> ", substrategies)
-            if verify and not (x in all_eqn):
-                print("# ?????? WTF WTF ????? Something is not Nash????")
             break
+    return x
+
+def compare_sample_gen(js, verify=False):
+    """
+    compare sample generation algorithm with gambit
+    """
+    g = game_utils.KnapsackGame(js)
+    print("Working on ", js.split('/')[-1])
+    all_eqn_start = datetime.now()
+    if verify:
+        all_eqn = g.all_eqns()
+    all_eqn_end = datetime.now()
+    sample_gen_start = datetime.now()
+    x = sample_gen(g)
     sample_gen_end = datetime.now()
+    if verify and not (x in all_eqn):
+        print("# ?????? WTF WTF ????? Something is not Nash????")
     return ((all_eqn_end - all_eqn_start).total_seconds(), (sample_gen_end - sample_gen_start).total_seconds())
 
 
@@ -73,7 +82,7 @@ def alltests():
         try:
             alltime = []
             for js in game_utils.ls(prefix='knapsack' + substr):
-                stopwatch = sample_gen(js, verify=True)
+                stopwatch = compare_sample_gen(js, verify=True)
                 alltime.append(stopwatch)
         finally:
             game_utils.dumpjs(alltime, 'knapsack' + substr + '_stat')
@@ -96,7 +105,7 @@ def main():
         alltests()
     else:
         for js in game_utils.ls():
-            sample_gen(js, verify=True)
+            compare_sample_gen(js, verify=True)
 
 
 if __name__ == '__main__':

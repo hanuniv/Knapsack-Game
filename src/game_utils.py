@@ -39,7 +39,7 @@ def stat(filename):
     """
     return the mean and standard deviation of the statistic file
 
-    e.g. stat('knapsack-3-4') 
+    e.g. stat('knapsack-3-4')
     """
     with open(TESTDIR + filename + '_stat.json', 'r') as fjs:
         data = json.load(fjs)
@@ -87,6 +87,9 @@ class KnapsackGame:
             self.write_gamefile(use_=True)
             self._all_eqns = list(self.enumerate_equilibrium(use_=True))
         return self._all_eqns
+
+    def current_eqns(self):
+        return list(self.enumerate_equilibrium(use_=False))
 
     def _gen_strategies(self):
         # Figure out the strategy based on budget constraints,
