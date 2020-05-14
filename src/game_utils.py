@@ -9,15 +9,15 @@ import gambit
 TESTDIR = "tests/"
 
 
-def ls(prefix='', suffix='.json', substr='', exclude='_stat'):
+def ls(lst=None, prefix='', suffix='.json', substr='', exclude='_stat'):
     """
     list file names with given suffix without arguments, if arguments are given, loop over given files (without suffix)
 
     call ls(), loop over all test files or file given by the command line
     call ls(prefix='knapsack1') loop over test files with prefix 'knapsack1'
     """
-    if len(sys.argv) > 1 and prefix == '' and substr == '':
-        jslist = [TESTDIR + f + suffix for f in sys.argv[1:]]
+    if lst is not None and prefix == '' and substr == '':
+        jslist = [TESTDIR + f + suffix for f in lst]
     else:
         jslist = [os.path.join(root, f) for root, _, files in os.walk(TESTDIR)
                   for f in files if f.endswith(suffix) and f.startswith(prefix) and substr in f and exclude not in f]

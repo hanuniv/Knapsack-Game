@@ -28,7 +28,7 @@ def gen_knapsack_json(m, n, suffix='3'):
 
 
 def main():
-    for (m, n) in [(3, 4), (6, 4), (3, 8), (6, 8)]:
+    for (m, n) in [(6, 8)]:
         for i in range(10):
             gen_knapsack_json(m, n, suffix='-{}-{}_{}'.format(m, n, i))
 

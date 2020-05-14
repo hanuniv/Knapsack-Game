@@ -12,14 +12,15 @@ import argparse
 # importlib.reload(game_utils)
 
 # Testing settings
-# reldir = '../tests/'
+# TESTDIR = '../tests/'
 # js = reldir + 'knapsack2.json'
+
 
 def sample_gen(g):
     """
     samle generation algorithm for finding nash equilibria
     """
-    substrategies = [[(0, 0, 0, 0)] for i in g.player_iter]
+    substrategies = [[tuple([0] * (g.n))] for i in g.player_iter]
     while True:
         # find a nash equilibria
         g.set_strategies(substrategies)
@@ -56,27 +57,35 @@ def sample_gen(g):
             break
     return x
 
-def compare_sample_gen(js, verify=False):
+
+def compare_sample_gen(js, verify=False, use_gambit=False):
     """
     compare sample generation algorithm with gambit
     """
     g = game_utils.KnapsackGame(js)
     print("Working on ", js.split('/')[-1])
-    all_eqn_start = datetime.now()
-    if verify:
-        all_eqn = g.all_eqns()
-    all_eqn_end = datetime.now()
+    # all_eqn_start= datetime.now()
+    form_start = datetime.now()
+    if use_gambit:
+        g._gen_strategies()
+        g.write_gamefile()
+    form_end = datetime.now()
+    compute_start = datetime.now()
+    if use_gambit:
+        all_eqn = g.current_eqns()
+    compute_end = datetime.now()
+    # all_eqn_end = datetime.now()
     sample_gen_start = datetime.now()
     x = sample_gen(g)
     sample_gen_end = datetime.now()
     if verify and not (x in all_eqn):
         print("# ?????? WTF WTF ????? Something is not Nash????")
-    return ((all_eqn_end - all_eqn_start).total_seconds(), (sample_gen_end - sample_gen_start).total_seconds())
+    return ((form_end - form_start).total_seconds(), (compute_end - compute_start).total_seconds(), (sample_gen_end - sample_gen_start).total_seconds())
 
 
 def alltests():
-    # msns = [(3, 4), (6, 4), (3, 8), (6, 8)]:
-    msns = [(3, 4)]
+    # msns = [(3, 4), (6, 4), (3, 8), (6, 8)]
+    msns = [(3, 8)]
     for m, n in msns:
         substr = "-{}-{}".format(m, n)
         try:
@@ -87,7 +96,7 @@ def alltests():
         finally:
             game_utils.dumpjs(alltime, 'knapsack' + substr + '_stat')
             timestat = game_utils.stat('knapsack' + substr)
-            print("Statistics of the execution", timestat)
+            print(">>>>>>>> Statistics of the execution", timestat)
 
 
 def main():
@@ -103,9 +112,11 @@ def main():
 
     if args.all:
         alltests()
-    else:
-        for js in game_utils.ls():
-            compare_sample_gen(js, verify=True)
+    elif args.filenames:
+        print(args.filenames)
+        for js in game_utils.ls(lst=args.filenames):
+            timestat = compare_sample_gen(js, verify=True)
+            print(timestat)
 
 
 if __name__ == '__main__':
